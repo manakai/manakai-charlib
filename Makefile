@@ -1,11 +1,4 @@
-MANAKAI_ROOT_DIR = ../../../
-MANAKAI_BIN_DIR = $(MANAKAI_ROOT_DIR)bin/
-MANAKAI_LIB_DIR = $(MANAKAI_ROOT_DIR)lib/
-
-DIS_SUFFIX = .dis
-DAEM_SUFFIX = .dafm
-DAFX_SUFFIX = .dafx
-PM_SUFFIX = .pm
+## TO UPDATE: make all release-update distclean
 
 CD = cd
 MKDIR = mkdir
@@ -15,11 +8,11 @@ RMALL = $(RM) -fv
 RMDIRALL = $(RMALL) -r
 PERL = perl
 PERL_OPTIONS =
-PERL_OPTIONS_ALL = $(PERL_OPTIONS) -I$(MANAKAI_LIB_DIR)
+PERL_OPTIONS_ALL = $(PERL_OPTIONS)
 PERL_ = $(PERL) $(PERL_OPTIONS_ALL)
 PERLC = $(PERL) -c -w
 PERLC_OPTIONS = 
-PERLC_OPTIONS_ALL = $(PERLC_OPTIONS) -I$(MANAKAI_LIB_DIR)
+PERLC_OPTIONS_ALL = $(PERLC_OPTIONS) 
 PERL_CHK = $(PERLC) $(PERLC_OPTIONS_ALL)
 TOUCH = touch
 WGET = wget
@@ -28,32 +21,16 @@ GREPV = $(GREP) -v
 PERL_INPLACE = $(PERL_) -n -i
 ECHO = echo
 CP = cp
+MV = mv
 
 ENC2XS_PATH = /usr/local/bin/
 ENC2XS = $(ENC2XS_PATH)enc2xs
-
-NS_CHARSET = http://suika.fam.cx/~wakaba/archive/2005/manakai/Charset/
-
-DIS_OPTIONS = 
-DIS_OPTIONS_ALL = $(DIS_OPTIONS) \
-      --search-path-catalog-file-name="$(MANAKAI_LIB_DIR)manakai/dis-catalog" \
-      --dis-file-suffix="$(DIS_SUFFIX)" \
-      --daem-file-suffix="$(DAEM_SUFFIX)" \
-      --dafx-file-suffix="$(DAFX_SUFFIX)"
-
-DAF_OPTIONS =
-DAF_PL = $(MANAKAI_BIN_DIR)daf.pl
-DAF = $(PERL_) $(DAF_PL) $(DAF_OPTIONS) $(DIS_OPTIONS_ALL)
 
 TBR2TBL_PL = tbr2tbl.pl
 TBR2TBL = $(PERL_) $(TBR2TBL_PL)
 
 TBL2UCM_PL = tbl2ucm.pl
 TBL2UCM = $(PERL_) $(TBL2UCM_PL)
-
-DIS_FILES = Encode$(DIS_SUFFIX)
-
-PM_FILES = Encode$(PM_SUFFIX)
 
 GL_JIS_TBR_FILES = gl-jisx0208-common.tbr gl-cjk-hiragana.tbr \
   gl-cjk-katakana.tbr gl-cjk-greek.tbr gl-cjk-cyrillic.tbr \
@@ -73,11 +50,7 @@ ENCODE_DIRECTORIES = \
 
 GENERATED_FILES = $(PM_FILES)
 
-all: $(PM_FILES) $(ENCODE_DIRECTORIES)
-
-$(PM_FILES): %$(PM_SUFFIX): %$(DIS_SUFFIX) $(DAF_PL)
-	$(DAF) --create-perl-module="$(NS_CHARSET)$* $@"
-	$(PERL_CHK) $@
+all: $(ENCODE_DIRECTORIES)
 
 $(TBR2TBL_PL):
 	$(WGET) http://suika.fam.cx/gate/cvs/*checkout*/perl/lib/Encode/Table/tool/tbr2tbl.pl
@@ -408,44 +381,57 @@ shift-jis-1997.tbl: %.tbl: %.tbr $(TBR2TBL_PL)
 
 GLJIS1978 GLJIS1983 GLJIS1997: GLJIS%: gl-jis-%.ucm
 	$(MKDIR) -p $@
-	$(CD) $@ && $(ENC2XS) -M $@ ../$<
+	$(CP) $< $@/$<
+	$(CD) $@ && $(ENC2XS) -M $@ $<
 	$(CD) $@ && $(PERL_) ./Makefile.PL
-	$(CD) $@ && $(MAKE)
+	$(CD) $@ && $(MAKE) manifest dist
 GLJIS1997Swapped: gl-jis-1997-swapped.ucm
 	$(MKDIR) -p $@
-	$(CD) $@ && $(ENC2XS) -M $@ ../$<
+	$(CP) $< $@/$<
+	$(CD) $@ && $(ENC2XS) -M $@ $<
 	$(CD) $@ && $(PERL_) ./Makefile.PL
-	$(CD) $@ && $(MAKE)
+	$(CD) $@ && $(MAKE) manifest dist
 EUCJP1997: euc-jp-1997.ucm
 	$(MKDIR) -p $@
-	$(CD) $@ && $(ENC2XS) -M $@ ../$<
+	$(CP) $< $@/$<
+	$(CD) $@ && $(ENC2XS) -M $@ $<
 	$(CD) $@ && $(PERL_) ./Makefile.PL
-	$(CD) $@ && $(MAKE)
+	$(CD) $@ && $(MAKE) manifest dist
 ShiftJIS1997: shift-jis-1997.ucm
 	$(MKDIR) -p $@
-	$(CD) $@ && $(ENC2XS) -M $@ ../$<
+	$(CP) $< $@/$<
+	$(CD) $@ && $(ENC2XS) -M $@ $<
 	$(CD) $@ && $(PERL_) ./Makefile.PL
-	$(CD) $@ && $(MAKE)
+	$(CD) $@ && $(MAKE) manifest dist
 
-install-GLJIS1978 install-GLJIS1983 install-GLJIS1997 install-GLJIS1997Swapped \
-  install-EUCJP1997 install-ShiftJIS1997: install-%: %
-	$(CD) $< && $(MAKE) install
+release-update:
+	$(MV) GLJIS1978/Encode-GLJIS1978-0.01.tar.gz ./
+	$(MV) GLJIS1983/Encode-GLJIS1983-0.01.tar.gz ./
+	$(MV) GLJIS1997/Encode-GLJIS1997-0.01.tar.gz ./
+	$(MV) GLJIS1997Swapped/Encode-GLJIS1997Swapped-0.01.tar.gz ./
+	$(MV) EUCJP1997/Encode-EUCJP1997-0.01.tar.gz ./
+	$(MV) ShiftJIS1997/Encode-ShiftJIS1997-0.01.tar.gz ./
 
-install: install-GLJIS1978 install-GLJIS1983 install-GLJIS1997 \
-  install-GLJIS1997Swapped \
-  install-EUCJP1997 install-ShiftJIS1997
+clean-GLJIS1978 clean-GLJIS1983 clean-GLJIS1997 clean-GLJIS1997Swapped \
+  clean-EUCJP1997 clean-ShiftJIS1997: clean-%: %
+	$(CD) $< && $(MAKE) clean
 
-clean:
+clean: clean-GLJIS1978 clean-GLJIS1983 clean-GLJIS1997 \
+  clean-GLJIS1997Swapped \
+  clean-EUCJP1997 clean-ShiftJIS1997
 	$(RMALL) $(GENERATED_FILES)
 	$(RMALL) .*.tmp *~ .*~ *.BAK .*.BAK
 	$(RMALL) $(TBR2TBL_PL) $(TBL2UCM_PL)
 	$(RMALL) $(TBR_FILES) $(TBL_FILES) $(UCM_FILES)
+
+clean-subdirectories:
 	$(RMDIRALL) $(ENCODE_DIRECTORIES)
 
-clean-db:
-	$(RMALL) *$(DAEM_SUFFIX) *$(DAFX_SUFFIX)
+distclean: clean-subdirectories
+	$(RMALL) $(GENERATED_FILES)
+	$(RMALL) .*.tmp *~ .*~ *.BAK .*.BAK
+	$(RMALL) $(TBR2TBL_PL) $(TBL2UCM_PL)
+	$(RMALL) $(TBR_FILES) $(TBL_FILES) $(UCM_FILES)
 
-distclean: clean clean-db
-
-## $Date: 2007/07/29 04:04:43 $
+## $Date: 2007/07/29 05:18:33 $
 ## License: Public Domain.
