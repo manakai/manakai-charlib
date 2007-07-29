@@ -1,0 +1,6 @@
+2007-07-29  Wakaba  <wakaba@suika.fam.cx>
+
+	* Makefile: Copy of manakai's |lib/Message/Charset/Makefile|.
+
+	* ChangeLog: New file.
+
