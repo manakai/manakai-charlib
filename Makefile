@@ -395,6 +395,7 @@ EUCJP1997: euc-jp-1997.ucm
 	$(MKDIR) -p $@
 	$(CP) $< $@/$<
 	$(CD) $@ && $(ENC2XS) -M $@ $<
+	$(CD) $@ && $(PERL_) -i -p -e 's/"0\.01"/"0.02"/' $@.pm
 	$(CD) $@ && $(PERL_) ./Makefile.PL
 	$(CD) $@ && $(MAKE) manifest dist
 ShiftJIS1997: shift-jis-1997.ucm
@@ -409,7 +410,7 @@ release-update:
 	$(MV) GLJIS1983/Encode-GLJIS1983-0.01.tar.gz ./
 	$(MV) GLJIS1997/Encode-GLJIS1997-0.01.tar.gz ./
 	$(MV) GLJIS1997Swapped/Encode-GLJIS1997Swapped-0.01.tar.gz ./
-	$(MV) EUCJP1997/Encode-EUCJP1997-0.01.tar.gz ./
+	$(MV) EUCJP1997/Encode-EUCJP1997-0.02.tar.gz ./
 	$(MV) ShiftJIS1997/Encode-ShiftJIS1997-0.01.tar.gz ./
 
 clean-GLJIS1978 clean-GLJIS1983 clean-GLJIS1997 clean-GLJIS1997Swapped \
@@ -433,5 +434,5 @@ distclean: clean-subdirectories
 	$(RMALL) $(TBR2TBL_PL) $(TBL2UCM_PL)
 	$(RMALL) $(TBR_FILES) $(TBL_FILES) $(UCM_FILES)
 
-## $Date: 2007/07/29 05:18:33 $
+## $Date: 2008/09/15 11:08:53 $
 ## License: Public Domain.
