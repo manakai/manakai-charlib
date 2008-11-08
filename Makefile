@@ -48,7 +48,7 @@ UCM_FILES = $(GENERATED_TBR_FILES:.tbr=.ucm)
 
 ENCODE_DIRECTORIES = \
   GLJIS1978 GLJIS1983 GLJIS1997 GLJIS1997Swapped EUCJP1997 ShiftJIS1997 \
-  EUCJP1997OPENNEC
+  EUCJP1997OPENNEC EUCJPSW
 
 GENERATED_FILES = $(PM_FILES)
 
@@ -381,6 +381,15 @@ euc-jp-1997-open-nec.tbl:
 	$(CAT) $@.tmp >> $@
 	$(RM) $@.tmp
 
+euc-jp-sw.tbl:
+	$(WGET) -O $@.tmp http://suika.fam.cx/gate/cvs/*checkout*/char/table/eucjp/euc-jp-sw.tbl
+	$(ECHO) '#?PETBL/1.0 SOURCE' > $@
+	$(ECHO) '#?o name="euc-jp-sw"' >> $@
+	$(ECHO) '#?o <-ucs-substition="0x30FB"' >> $@
+	$(ECHO) '#?o ucm:mb_cur_max="3"' >> $@
+	$(CAT) $@.tmp >> $@
+	$(RM) $@.tmp
+
 shift-jis-1997.tbl: %.tbl: %.tbr $(TBR2TBL_PL)
 	$(TBR2TBL) $< > $@
 
@@ -415,6 +424,12 @@ EUCJP1997OPENNEC: euc-jp-1997-open-nec.ucm
 	$(CD) $@ && $(ENC2XS) -M $@ $<
 	$(CD) $@ && $(PERL_) ./Makefile.PL
 	$(CD) $@ && $(MAKE) manifest dist
+EUCJPSW: euc-jp-sw.ucm
+	$(MKDIR) -p $@
+	$(CP) $< $@/$<
+	$(CD) $@ && $(ENC2XS) -M $@ $<
+	$(CD) $@ && $(PERL_) ./Makefile.PL
+	$(CD) $@ && $(MAKE) manifest dist
 ShiftJIS1997: shift-jis-1997.ucm
 	$(MKDIR) -p $@
 	$(CP) $< $@/$<
@@ -429,15 +444,17 @@ release-update:
 	$(MV) GLJIS1997Swapped/Encode-GLJIS1997Swapped-0.01.tar.gz ./
 	$(MV) EUCJP1997/Encode-EUCJP1997-0.02.tar.gz ./
 	$(MV) EUCJP1997/Encode-EUCJP1997OPENNEC-0.01.tar.gz ./
+	$(MV) EUCJP1997/Encode-EUCJPSW-0.01.tar.gz ./
 	$(MV) ShiftJIS1997/Encode-ShiftJIS1997-0.01.tar.gz ./
 
 clean-GLJIS1978 clean-GLJIS1983 clean-GLJIS1997 clean-GLJIS1997Swapped \
-  clean-EUCJP1997 clean-EUCJP1997OPENNEC clean-ShiftJIS1997: clean-%: %
+  clean-EUCJP1997 clean-EUCJP1997OPENNEC clean-EUCJPSW \
+  clean-ShiftJIS1997: clean-%: %
 	$(CD) $< && $(MAKE) clean
 
 clean: clean-GLJIS1978 clean-GLJIS1983 clean-GLJIS1997 \
   clean-GLJIS1997Swapped \
-  clean-EUCJP1997 clean-EUCJP1997OPENNEC clean-ShiftJIS1997
+  clean-EUCJP1997 clean-EUCJP1997OPENNEC clean-EUCJPSW clean-ShiftJIS1997
 	$(RMALL) $(GENERATED_FILES)
 	$(RMALL) .*.tmp *~ .*~ *.BAK .*.BAK
 	$(RMALL) $(TBR2TBL_PL) $(TBL2UCM_PL)
@@ -452,5 +469,5 @@ distclean: clean-subdirectories
 	$(RMALL) $(TBR2TBL_PL) $(TBL2UCM_PL)
 	$(RMALL) $(TBR_FILES) $(TBL_FILES) $(UCM_FILES)
 
-## $Date: 2008/11/08 05:03:49 $
+## $Date: 2008/11/08 06:59:37 $
 ## License: Public Domain.
