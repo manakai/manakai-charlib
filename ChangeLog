@@ -1,3 +1,9 @@
+2008-11-08  Wakaba  <wakaba@suika.fam.cx>
+
+	* Makefile: New rules for Encode::EUCJP1997OPENNEC are added.
+
+	* readme.en.html: A link to the new module is added.
+
 2008-09-15  Wakaba  <wakaba@suika.fam.cx>
 
 	* readme.en.html: Link updated.

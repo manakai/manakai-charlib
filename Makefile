@@ -46,7 +46,8 @@ TBL_FILES = $(GENERATED_TBR_FILES:.tbr=.tbl)
 UCM_FILES = $(GENERATED_TBR_FILES:.tbr=.ucm)
 
 ENCODE_DIRECTORIES = \
-  GLJIS1978 GLJIS1983 GLJIS1997 GLJIS1997Swapped EUCJP1997 ShiftJIS1997
+  GLJIS1978 GLJIS1983 GLJIS1997 GLJIS1997Swapped EUCJP1997 ShiftJIS1997 \
+  EUCJP1997OPENNEC
 
 GENERATED_FILES = $(PM_FILES)
 
@@ -370,6 +371,9 @@ euc-jp-1997.tbl: %.tbl: %.tbr \
   .euc-jp-1997-gr-left.tbr.tmp $(TBR2TBL_PL)
 	$(TBR2TBL) $< > $@
 
+euc-jp-1997-open-nec.tbl:
+	$(WGET) -O $@ http://suika.fam.cx/gate/cvs/*checkout*/char/table/eucjp/euc-jp-1997-open-nec.tbl
+
 shift-jis-1997.tbl: %.tbl: %.tbr $(TBR2TBL_PL)
 	$(TBR2TBL) $< > $@
 
@@ -398,6 +402,12 @@ EUCJP1997: euc-jp-1997.ucm
 	$(CD) $@ && $(PERL_) -i -p -e 's/"0\.01"/"0.02"/' $@.pm
 	$(CD) $@ && $(PERL_) ./Makefile.PL
 	$(CD) $@ && $(MAKE) manifest dist
+EUCJP1997OPENNEC: euc-jp-1997-open-nec.ucm
+	$(MKDIR) -p $@
+	$(CP) $< $@/$<
+	$(CD) $@ && $(ENC2XS) -M $@ $<
+	$(CD) $@ && $(PERL_) ./Makefile.PL
+	$(CD) $@ && $(MAKE) manifest dist
 ShiftJIS1997: shift-jis-1997.ucm
 	$(MKDIR) -p $@
 	$(CP) $< $@/$<
@@ -411,15 +421,16 @@ release-update:
 	$(MV) GLJIS1997/Encode-GLJIS1997-0.01.tar.gz ./
 	$(MV) GLJIS1997Swapped/Encode-GLJIS1997Swapped-0.01.tar.gz ./
 	$(MV) EUCJP1997/Encode-EUCJP1997-0.02.tar.gz ./
+	$(MV) EUCJP1997/Encode-EUCJP1997OPENNEC-0.01.tar.gz ./
 	$(MV) ShiftJIS1997/Encode-ShiftJIS1997-0.01.tar.gz ./
 
 clean-GLJIS1978 clean-GLJIS1983 clean-GLJIS1997 clean-GLJIS1997Swapped \
-  clean-EUCJP1997 clean-ShiftJIS1997: clean-%: %
+  clean-EUCJP1997 clean-EUCJP1997OPENNEC clean-ShiftJIS1997: clean-%: %
 	$(CD) $< && $(MAKE) clean
 
 clean: clean-GLJIS1978 clean-GLJIS1983 clean-GLJIS1997 \
   clean-GLJIS1997Swapped \
-  clean-EUCJP1997 clean-ShiftJIS1997
+  clean-EUCJP1997 clean-EUCJP1997OPENNEC clean-ShiftJIS1997
 	$(RMALL) $(GENERATED_FILES)
 	$(RMALL) .*.tmp *~ .*~ *.BAK .*.BAK
 	$(RMALL) $(TBR2TBL_PL) $(TBL2UCM_PL)
@@ -434,5 +445,5 @@ distclean: clean-subdirectories
 	$(RMALL) $(TBR2TBL_PL) $(TBL2UCM_PL)
 	$(RMALL) $(TBR_FILES) $(TBL_FILES) $(UCM_FILES)
 
-## $Date: 2008/09/15 11:08:53 $
+## $Date: 2008/11/08 04:49:08 $
 ## License: Public Domain.
