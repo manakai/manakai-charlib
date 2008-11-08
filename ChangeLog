@@ -1,5 +1,9 @@
 2008-11-08  Wakaba  <wakaba@suika.fam.cx>
 
+	* Makefile: Set the encoding name for Encode::EUCJP1997OPENNEC.
+
+2008-11-08  Wakaba  <wakaba@suika.fam.cx>
+
 	* Makefile: New rules for Encode::EUCJP1997OPENNEC are added.
 
 	* readme.en.html: A link to the new module is added.

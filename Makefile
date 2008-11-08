@@ -1,6 +1,7 @@
 ## TO UPDATE: make all release-update distclean
 
 CD = cd
+CAT = cat
 MKDIR = mkdir
 MAKE = make
 RM = rm
@@ -372,7 +373,13 @@ euc-jp-1997.tbl: %.tbl: %.tbr \
 	$(TBR2TBL) $< > $@
 
 euc-jp-1997-open-nec.tbl:
-	$(WGET) -O $@ http://suika.fam.cx/gate/cvs/*checkout*/char/table/eucjp/euc-jp-1997-open-nec.tbl
+	$(WGET) -O $@.tmp http://suika.fam.cx/gate/cvs/*checkout*/char/table/eucjp/euc-jp-1997-open-nec.tbl
+	$(ECHO) '#?PETBL/1.0 SOURCE' > $@
+	$(ECHO) '#?o name="euc-jp-1997-open-nec"' >> $@
+	$(ECHO) '#?o <-ucs-substition="0x30FB"' >> $@
+	$(ECHO) '#?o ucm:mb_cur_max="3"' >> $@
+	$(CAT) $@.tmp >> $@
+	$(RM) $@.tmp
 
 shift-jis-1997.tbl: %.tbl: %.tbr $(TBR2TBL_PL)
 	$(TBR2TBL) $< > $@
@@ -445,5 +452,5 @@ distclean: clean-subdirectories
 	$(RMALL) $(TBR2TBL_PL) $(TBL2UCM_PL)
 	$(RMALL) $(TBR_FILES) $(TBL_FILES) $(UCM_FILES)
 
-## $Date: 2008/11/08 04:49:08 $
+## $Date: 2008/11/08 05:03:49 $
 ## License: Public Domain.
