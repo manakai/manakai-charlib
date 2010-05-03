@@ -452,18 +452,12 @@ clean-GLJIS1978 clean-GLJIS1983 clean-GLJIS1997 clean-GLJIS1997Swapped \
 clean: clean-GLJIS1978 clean-GLJIS1983 clean-GLJIS1997 \
   clean-GLJIS1997Swapped \
   clean-EUCJP1997 clean-EUCJP1997OPENNEC clean-EUCJPSW clean-ShiftJIS1997
-	$(RMALL) $(GENERATED_FILES)
 	$(RMALL) .*.tmp *~ .*~ *.BAK .*.BAK
-	$(RMALL) $(TBR2TBL_PL) $(TBL2UCM_PL)
-	$(RMALL) $(TBR_FILES) $(TBL_FILES) $(UCM_FILES)
 
 clean-subdirectories:
 	$(RMDIRALL) $(ENCODE_DIRECTORIES)
 
 distclean: clean-subdirectories
-	$(RMALL) $(GENERATED_FILES)
 	$(RMALL) .*.tmp *~ .*~ *.BAK .*.BAK
-	$(RMALL) $(TBR2TBL_PL) $(TBL2UCM_PL)
-	$(RMALL) $(TBR_FILES) $(TBL_FILES) $(UCM_FILES)
 
 ## License: Public Domain.
