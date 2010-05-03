@@ -36,43 +36,75 @@ GENERATED_FILES = $(PM_FILES)
 
 all: $(ENCODE_DIRECTORIES)
 
-GLJIS1978 GLJIS1983 GLJIS1997: GLJIS%: $(UCM_DIR)gl-jis-%.ucm
-	$(MKDIR) -p $@
-	$(CP) $< $@/$(<:$(UCM_DIR)%=%)
-	$(CD) $@ && $(ENC2XS) -M $@ $(<:$(UCM_DIR)%=%)
-	$(CD) $@ && $(PERL_) ./Makefile.PL
-	$(CD) $@ && $(MAKE) manifest dist
-GLJIS1997Swapped: $(UCM_DIR)gl-jis-1997-swapped.ucm
-	$(MKDIR) -p $@
-	$(CP) $< $@/$(<:$(UCM_DIR)%=%)
-	$(CD) $@ && $(ENC2XS) -M $@ $(<:$(UCM_DIR)%=%)
-	$(CD) $@ && $(PERL_) ./Makefile.PL
-	$(CD) $@ && $(MAKE) manifest dist
-EUCJP1997: $(UCM_DIR)euc-jp-1997.ucm
-	$(MKDIR) -p $@
-	$(CP) $< $@/$(<:$(UCM_DIR)%=%)
-	$(CD) $@ && $(ENC2XS) -M $@ $(<:$(UCM_DIR)%=%)
-	$(CD) $@ && $(PERL_) -i -p -e 's/"0\.01"/"0.02"/' $@.pm
-	$(CD) $@ && $(PERL_) ./Makefile.PL
-	$(CD) $@ && $(MAKE) manifest dist
-EUCJP1997OPENNEC: $(UCM_DIR)euc-jp-1997-open-nec.ucm
-	$(MKDIR) -p $@
-	$(CP) $< $@/$(<:$(UCM_DIR)%=%)
-	$(CD) $@ && $(ENC2XS) -M $@ $(<:$(UCM_DIR)%=%)
-	$(CD) $@ && $(PERL_) ./Makefile.PL
-	$(CD) $@ && $(MAKE) manifest dist
-EUCJPSW: $(UCM_DIR)euc-jp-sw.ucm
-	$(MKDIR) -p $@
-	$(CP) $< $@/$(<:$(UCM_DIR)%=%)
-	$(CD) $@ && $(ENC2XS) -M $@ $(<:$(UCM_DIR)%=%)
-	$(CD) $@ && $(PERL_) ./Makefile.PL
-	$(CD) $@ && $(MAKE) manifest dist
-ShiftJIS1997: $(UCM_DIR)shift-jis-1997.ucm
-	$(MKDIR) -p $@
-	$(CP) $< $@/$(<:$(UCM_DIR)%=%)
-	$(CD) $@ && $(ENC2XS) -M $@ $(<:$(UCM_DIR)%=%)
-	$(CD) $@ && $(PERL_) ./Makefile.PL
-	$(CD) $@ && $(MAKE) manifest dist
+GLJIS1978: $(UCM_DIR)gl-jis-1978.ucm Makefile
+	make subdir SUBDIR_DIRNAME=$@ SUBDIR_SOURCE=$< SUBDIR_VERSION=0.02 \
+	  SUBDIR_ENCODE_NAME=gl-jis-1978
+GLJIS1983: $(UCM_DIR)gl-jis-1978.ucm Makefile
+	make subdir SUBDIR_DIRNAME=$@ SUBDIR_SOURCE=$< SUBDIR_VERSION=0.02 \
+	  SUBDIR_ENCODE_NAME=gl-jis-1983
+GLJIS1997: $(UCM_DIR)gl-jis-1978.ucm Makefile
+	make subdir SUBDIR_DIRNAME=$@ SUBDIR_SOURCE=$< SUBDIR_VERSION=0.02 \
+	  SUBDIR_ENCODE_NAME=gl-jis-1997
+GLJIS1997Swapped: $(UCM_DIR)gl-jis-1997-swapped.ucm Makefile
+	make subdir SUBDIR_DIRNAME=$@ SUBDIR_SOURCE=$< SUBDIR_VERSION=0.02 \
+	  SUBDIR_ENCODE_NAME=gl-jis-1997-swapped
+EUCJP1997: $(UCM_DIR)euc-jp-1997.ucm Makefile
+	make subdir SUBDIR_DIRNAME=$@ SUBDIR_SOURCE=$< SUBDIR_VERSION=0.03 \
+	  SUBDIR_ENCODE_NAME=euc-jp-1997
+EUCJP1997OPENNEC: $(UCM_DIR)euc-jp-1997-open-nec.ucm Makefile
+	make subdir SUBDIR_DIRNAME=$@ SUBDIR_SOURCE=$< SUBDIR_VERSION=0.02 \
+	  SUBDIR_ENCODE_NAME=euc-jp-1997-open-nec
+EUCJPSW: $(UCM_DIR)euc-jp-sw.ucm Makefile
+	make subdir SUBDIR_DIRNAME=$@ SUBDIR_SOURCE=$< SUBDIR_VERSION=0.02 \
+	  SUBDIR_ENCODE_NAME=euc-jp-sw
+ShiftJIS1997: $(UCM_DIR)shift-jis-1997.ucm Makefile
+	make subdir SUBDIR_DIRNAME=$@ SUBDIR_SOURCE=$< SUBDIR_VERSION=0.02 \
+	  SUBDIR_ENCODE_NAME=shift-jis-1997
+
+subdir: Makefile
+	$(MKDIR) -p $(SUBDIR_DIRNAME)
+	$(CP) $(SUBDIR_SOURCE) $(SUBDIR_DIRNAME)/$(SUBDIR_SOURCE:$(UCM_DIR)%=%)
+	$(CD) $(SUBDIR_DIRNAME) && $(ENC2XS) -M $(SUBDIR_DIRNAME) $(SUBDIR_SOURCE:$(UCM_DIR)%=%)
+	$(RM) $(SUBDIR_DIRNAME)/Changes
+	$(RM) $(SUBDIR_DIRNAME)/README
+	$(CD) $(SUBDIR_DIRNAME) && $(PERL_) -i -p -e 's/"0\.01"/"$(SUBDIR_VERSION)"/' $(SUBDIR_DIRNAME).pm
+	$(CD) $(SUBDIR_DIRNAME) && $(PERL_) -i -p -0 -e 's{__END__.*}{qq{join "\n", \
+		"__END__", \
+		"", \
+		"=head1 NAME", \
+		"", \
+		"Encode::$(SUBDIR_DIRNAME) - Encode module for the charset C<$(SUBDIR_ENCODE_NAME)>", \
+		"", \
+		"=head1 SYNOPSIS", \
+		"", \
+		"  use Encode;", \
+		"  use Encode::$(SUBDIR_DIRNAME);", \
+		"  my \\x24bytes = encode \\x27$(SUBDIR_ENCODE_NAME)\\x27, \\x24chars;", \
+		"  my \\x24chars = decode \\x27$(SUBDIR_ENCODE_NAME)\\x27, \\x24bytes;", \
+		"", \
+		"=head1 SEE ALSO", \
+		"", \
+		"manakai-charlib <http://suika.fam.cx/www/manakai-charlib/readme>.", \
+		"", \
+		"=head1 AUTHOR", \
+		"", \
+		"Wakaba <w\\x40suika.fam.cx>.", \
+		"", \
+		"=head1 LICENSE", \
+		"", \
+		"Copyright 2006-2010 Wakaba <w\\x40suika.fam.cx>.", \
+		"", \
+		"This library is free software; you can redistribute it and/or modify", \
+		"it under the same terms as Perl itself.", \
+		"", \
+        }}see' $(SUBDIR_DIRNAME).pm
+	$(CD) $(SUBDIR_DIRNAME) && $(PERL_) -i -p -e 's/WriteMakefile\(/WriteMakefile\( \
+		ABSTRACT_FROM => "$(SUBDIR_DIRNAME).pm", \
+		AUTHOR => "Wakaba <w".chr(0x40)."suika.fam.cx>", \
+		LICENSE => "Perl", \
+	/' Makefile.PL
+	$(CD) $(SUBDIR_DIRNAME) && $(PERL_) ./Makefile.PL
+	$(CD) $(SUBDIR_DIRNAME) && $(MAKE) manifest dist
 
 release-update: \
     GLJIS1978 GLJIS1983 GLJIS1997 GLJIS1997Swapped \
