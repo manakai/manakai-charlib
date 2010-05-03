@@ -24,7 +24,7 @@ ECHO = echo
 CP = cp
 MV = mv
 
-ENC2XS_PATH = /usr/local/bin/
+ENC2XS_PATH = 
 ENC2XS = $(ENC2XS_PATH)enc2xs
 
 TBR2TBL_PL = tbr2tbl.pl
