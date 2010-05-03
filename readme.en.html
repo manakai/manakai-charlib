@@ -9,63 +9,72 @@
 <body>
 <h1>manakai charlib</h1>
 
-<p><dfn>manakai charlib</dfn> is a subproject of 
-<a href="http://suika.fam.cx/www/2006/manakai/" rel=up>manakai</a>
-to develope Perl modules related to character encoding.</p>
+<p>The <dfn>manakai charlib</dfn> is a product of the <a
+href="http://suika.fam.cx/www/2006/manakai/" rel=up>manakai</a>
+project and is intended to provide supplemental Perl modules to
+support character encodings in the wild.
 
 <div class="section" id="modules">
 <h2>Perl Modules</h2>
 
-<dl>
-<dt><a href="Encode-GLJIS1978-0.01.tar.gz"><code>Encode::GLJIS1978</code></a>
-(tar + gzip, 42ko)</dt>
-<dt><a href="Encode-GLJIS1983-0.01.tar.gz"><code>Encode::GLJIS1983</code></a>
-(tar + gzip, 43ko)</dt>
-<dt><a href="Encode-GLJIS1997-0.01.tar.gz"><code>Encode::GLJIS1997</code></a>
-(tar + gzip, 43ko)</dt>
-<dt><a href="GLJIS1997Swapped/Encode-GLJIS1997Swapped-0.01.tar.gz"><code>Encode::GLJIS1997Swapped</code></a>
-(tar + gzip, 43ko)</dt>
-  <dd>It is necessary to install these Perl modules if you
-  want to enable the module
-  <a href="http://suika.fam.cx/www/markup/html/whatpm/Whatpm/Charset/DecodeHandle.html"><code>Whatpm::Charset::DecodeHandle</code></a>
-  to decode <code>ISO-2022-JP</code>-encoded text.</dd>
-<dt><a href="Encode-EUCJP1997-0.02.tar.gz"><code>Encode::EUCJP1997</code></a>
-(tar + gzip, 77ko)</dt>
-  <dd>It is necessary to install this Perl module if you
-  want to enable the module
-  <a href="http://suika.fam.cx/www/markup/html/whatpm/Whatpm/Charset/DecodeHandle.html"><code>Whatpm::Charset::DecodeHandle</code></a>
-  to decode <code>EUC-JP</code>-encoded text.</dd>
+<p>Following Perl modules provide support for various character
+encodings through Perl's standard <code class=perl>Encode</code>
+interface.  However, they are not intended to be used by themselves;
+they form integrated part of protocol or document format processors,
+such as <a
+href="http://suika.fam.cx/www/markup/html/whatpm/Whatpm/Charset/DecodeHandle.html"><code
+class=perl>Whatpm::Charset::DecodeHandle</code></a>.
 
-<dt><a
+<ul>
+
+<li><a
+href="Encode-GLJIS1978-0.01.tar.gz"><code>Encode::GLJIS1978</code></a>
+(tar + gzip, 42<abbr title="kilooctets">ko</abbr>)
+
+<li><a href="Encode-GLJIS1983-0.01.tar.gz"><code>Encode::GLJIS1983</code></a>
+(tar + gzip, 42<abbr title="kilooctets">ko</abbr>)
+
+<li><a href="Encode-GLJIS1997-0.01.tar.gz"><code>Encode::GLJIS1997</code></a>
+(tar + gzip, 42<abbr title="kilooctets">ko</abbr>)
+
+<li><a href="GLJIS1997Swapped/Encode-GLJIS1997Swapped-0.01.tar.gz"><code>Encode::GLJIS1997Swapped</code></a>
+(tar + gzip, 42<abbr title="kilooctets">ko</abbr>)
+
+<li><a
+href="Encode-EUCJP1997-0.02.tar.gz"><code>Encode::EUCJP1997</code></a>
+(tar + gzip, 44<abbr title="kilooctets">ko</abbr>)
+
+<li><a
 href="Encode-EUCJP1997OPENNEC-0.01.tar.gz"><code>Encode::EUCJP1997OPENNEC</code></a>
-(tar + gzip, 88ko)
+(tar + gzip, 88<abbr title="kilooctets">ko</abbr>)
 
-<dt><a
+<li><a
 href="Encode-EUCJPSW-0.01.tar.gz"><code>Encode::EUCJPSW</code></a>
-(tar + gzip, 88ko)
+(tar + gzip, 88<abbr title="kilooctets">ko</abbr>)
 
-<dt><a href="Encode-ShiftJIS1997-0.01.tar.gz"><code>Encode::ShiftJIS1997</code></a>
-(tar + gzip, 45ko)</dt>
-  <dd>It is necessary to install this Perl module if you
-  want to enable the module 
-  <a href="http://suika.fam.cx/www/markup/html/whatpm/Whatpm/Charset/DecodeHandle.html"><code>Whatpm::Charset::DecodeHandle</code></a>
-  to decode <code>Shift_JIS</code>-encoded text.</dd>
-</dl>
+<li><a href="Encode-ShiftJIS1997-0.01.tar.gz"><code>Encode::ShiftJIS1997</code></a>
+(tar + gzip, 77<abbr title="kilooctets">ko</abbr>)
+
+</ul>
 </div>
 
 <div class="section" id="install">
 <h2>Install</h2>
 
+<p>For each tarball listed in the <a href="#modules">Perl modules</a>
+section, run the following commands:
+
 <ol>
-<li>Download a <a href="#modules">Perl modules</a> to install
-and then expand it.</li>
 <li><kbd>perl Makefile.PL</kbd></li>
 <li><kbd>make</kbd></li>
 <li><kbd>make install</kbd></li>
 </ol>
 
-<p>Note that these modules are written in XS; they must
-be compiled before they get ready to be used.</p>
+<div class=note>
+  <p>Note that these modules are written in XS; they must
+  be compiled before they get ready to be used.</p>
+</div>
+
 </div>
 
 <div class="section" id="author">
@@ -77,9 +86,9 @@ be compiled before they get ready to be used.</p>
 <div class="section" id="license">
 <h2>License</h2>
 
-<p>Copyright 2006-2008 Wakaba 
-<code class="mail">&lt;<a href="mailto:w@suika.fam.cx"
-    rel="author">w@suika.fam.cx</a>></code>.</p>
+<p>Copyright 2006-2010 Wakaba <code class="mail">&lt;<a
+href="mailto:w@suika.fam.cx"
+rel="author">w@suika.fam.cx</a>></code>.</p>
 
 <p>This library is free software; you can redistribute it and/or modify 
 it under the same terms as Perl itself.</p>
