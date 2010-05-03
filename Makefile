@@ -16,7 +16,6 @@ PERLC_OPTIONS =
 PERLC_OPTIONS_ALL = $(PERLC_OPTIONS) 
 PERL_CHK = $(PERLC) $(PERLC_OPTIONS_ALL)
 TOUCH = touch
-WGET = wget
 GREP = grep
 GREPV = $(GREP) -v
 PERL_INPLACE = $(PERL_) -n -i
@@ -27,15 +26,21 @@ MV = mv
 ENC2XS_PATH = 
 ENC2XS = $(ENC2XS_PATH)enc2xs
 
-TBR2TBL_PL = tbr2tbl.pl
+BIN_DIR = modules/chartables/bin/
+TBR_DIR = modules/chartables/source/
+TBL_DIR = modules/chartables/generated/
+EUCTBL_DIR = modules/chartables/eucjp/
+CPTBR_DIR = modules/chartables/cp/
+
+TBR2TBL_PL = $(BIN_DIR)tbr2tbl.pl
 TBR2TBL = $(PERL_) $(TBR2TBL_PL)
 
-TBL2UCM_PL = tbl2ucm.pl
+TBL2UCM_PL = $(BIN_DIR)tbl2ucm.pl
 TBL2UCM = $(PERL_) $(TBL2UCM_PL)
 
-GL_JIS_TBR_FILES = gl-jisx0208-common.tbr gl-cjk-hiragana.tbr \
-  gl-cjk-katakana.tbr gl-cjk-greek.tbr gl-cjk-cyrillic.tbr \
-  gl-iso-646-alphanumeric.tbr gl-cjk-box-drawing.tbr
+GL_JIS_TBR_FILES = $(TBR_DIR)gl-jisx0208-common.tbr $(TBR_DIR)gl-cjk-hiragana.tbr \
+  $(TBR_DIR)gl-cjk-katakana.tbr $(TBR_DIR)gl-cjk-greek.tbr $(TBR_DIR)gl-cjk-cyrillic.tbr \
+  $(TBR_DIR)gl-iso-646-alphanumeric.tbr $(TBR_DIR)gl-cjk-box-drawing.tbr
 GENERATED_TBR_FILES = euc-jp-1997.tbr shift-jis-1997.tbr \
   gl-jis-1978.tbr gl-jis-1983.tbr gl-jis-1997.tbr gl-jis-1997-swapped.tbr
 TBR_FILES = $(GL_JIS_TBR_FILES) $(GENERATED_TBR_FILES) \
@@ -54,18 +59,8 @@ GENERATED_FILES = $(PM_FILES)
 
 all: $(ENCODE_DIRECTORIES)
 
-$(TBR2TBL_PL):
-	$(WGET) http://suika.fam.cx/gate/cvs/*checkout*/perl/lib/Encode/Table/tool/tbr2tbl.pl
-
-$(TBL2UCM_PL):
-	$(WGET) http://suika.fam.cx/gate/cvs/*checkout*/perl/lib/Encode/Table/tool/tbl2ucm.pl
-
-jisx0208_1997.tbr $(GL_JIS_TBR_FILES) gl-iso-646-symbol.tbr \
-  gl-iso-646-alphanumeric-fw.tbr gl-jisx0212-common.tbr:
-	$(WGET) -O $@ http://suika.fam.cx/gate/cvs/*checkout*/perl/lib/Encode/Table/$@
-
-gl-jis-1997.tbr: jisx0208_1997.tbr $(GL_JIS_TBR_FILES) \
-  gl-iso-646-symbol.tbr $(TBR2TBL_PL)
+gl-jis-1997.tbr: $(TBR_DIR)jisx0208_1997.tbr $(GL_JIS_TBR_FILES) \
+  $(TBR_DIR)gl-iso-646-symbol.tbr $(TBR2TBL_PL)
 	$(TBR2TBL) $< > $@
 	$(PERL_INPLACE) -e 'print unless /^#(?!\?PETBL)/' $@
 	$(ECHO) '#?o name="gl-jis-1997"' >> $@
@@ -232,9 +227,9 @@ gl-jis-1978.tbr: gl-jis-1983.tbr
 	$(ECHO) '#?o license="Public Domain"' >> $@
 
 .euc-jp-1997-gr-left.tbr.tmp: $(GL_JIS_TBR_FILES) \
-  gl-iso-646-alphanumeric-fw.tbr $(TBR2TBL_PL)
+  $(TBR_DIR)gl-iso-646-alphanumeric-fw.tbr $(TBR2TBL_PL)
 	$(ECHO) '#?PETBL/1.0 SOURCE' > $@.tmp
-	$(ECHO) '#?import src="gl-jisx0208-common.tbr" mode="standard,fullwidth,isoiec646irv,NOT-SIGN,LARGE-CIRCLE,nonhan-1983-add,han-1978-revised,han-1983-revised,han-1983-swapped,han-1983-add,han-1990-revised,han-1990-add"' >> $@.tmp
+	$(ECHO) '#?import src="$(TBR_DIR)gl-jisx0208-common.tbr" mode="standard,fullwidth,isoiec646irv,NOT-SIGN,LARGE-CIRCLE,nonhan-1983-add,han-1978-revised,han-1983-revised,han-1983-swapped,han-1983-add,han-1990-revised,han-1990-add"' >> $@.tmp
 	$(TBR2TBL) $@.tmp > $@
 	$(RM) $@.tmp
 
@@ -246,8 +241,8 @@ euc-jp-1997.tbr:
 	$(ECHO) '#?o license="Public Domain"' >> $@
 	$(ECHO) '#?import std-cl' >> $@
 	$(ECHO) '#?import std-0x20' >> $@
-	$(ECHO) '#?import src="gl-iso-646-alphanumeric.tbr"' >> $@
-	$(ECHO) '#?import src="gl-iso-646-symbol.tbr"' >> $@
+	$(ECHO) '#?import src="$(TBR_DIR)gl-iso-646-alphanumeric.tbr"' >> $@
+	$(ECHO) '#?import src="$(TBR_DIR)gl-iso-646-symbol.tbr"' >> $@
 	$(ECHO) '#?import std-0x7F' >> $@
 	$(ECHO) '0x80	U+0080		# <control>' >> $@
 	$(ECHO) '0x81	U+0081		# <control>' >> $@
@@ -346,10 +341,10 @@ euc-jp-1997.tbr:
 	$(ECHO) '0x8EDD	U+FF9D		# HALFWIDTH KATAKANA LETTER N' >> $@
 	$(ECHO) '0x8EDE	U+FF9E		# HALFWIDTH KATAKANA VOICED SOUND MARK' >> $@
 	$(ECHO) '0x8EDF	U+FF9F		# HALFWIDTH KATAKANA SEMI-VOICED SOUND MARK' >> $@
-	$(ECHO) '#?import src="gl-jisx0212-common.tbr" mode="fullwidth,isoiec646irv,BROKEN-BAR,han" offset="0x8F8080"' >> $@
+	$(ECHO) '#?import src="$(TBR_DIR)gl-jisx0212-common.tbr" mode="fullwidth,isoiec646irv,BROKEN-BAR,han" offset="0x8F8080"' >> $@
 
 shift-jis-1997.tbr:
-	$(WGET) -O $@ http://suika.fam.cx/gate/cvs/*checkout*/perl/lib/Encode/Table/cp/cp932-ms.tbr
+	cp $(CPTBR_DIR)cp932-ms.tbr $@
 	$(PERL_INPLACE) -e 'print unless /^0x(?:5C|7E|8(?:[07]|1(?:5[CF]|6[01]|7C|9[12]|CA))|A0|F)|<-|->/' $@
 	$(ECHO) '0x5C	U+00A5		# YEN SIGN' >> $@
 	$(ECHO) '0x7E	U+203E		# OVERLINE' >> $@
@@ -367,13 +362,13 @@ shift-jis-1997.tbr:
 	$(ECHO) '#?o license="Public Domain"' >> $@
 
 euc-jp-1997.tbl: %.tbl: %.tbr \
-  gl-iso-646-alphanumeric.tbr gl-iso-646-symbol.tbr \
-  gl-iso-646-alphanumeric-fw.tbr gl-jisx0212-common.tbr \
+  $(TBR_DIR)gl-iso-646-alphanumeric.tbr $(TBR_DIR)gl-iso-646-symbol.tbr \
+  $(TBR_DIR)gl-iso-646-alphanumeric-fw.tbr $(TBR_DIR)gl-jisx0212-common.tbr \
   .euc-jp-1997-gr-left.tbr.tmp $(TBR2TBL_PL)
 	$(TBR2TBL) $< > $@
 
 euc-jp-1997-open-nec.tbl:
-	$(WGET) -O $@.tmp http://suika.fam.cx/gate/cvs/*checkout*/char/table/eucjp/euc-jp-1997-open-nec.tbl
+	cp $(EUCTBL_DIR)euc-jp-1997-open-nec.tbl $@.tmp
 	$(ECHO) '#?PETBL/1.0 SOURCE' > $@
 	$(ECHO) '#?o name="euc-jp-1997-open-nec"' >> $@
 	$(ECHO) '#?o <-ucs-substition="0x30FB"' >> $@
@@ -382,7 +377,7 @@ euc-jp-1997-open-nec.tbl:
 	$(RM) $@.tmp
 
 euc-jp-sw.tbl:
-	$(WGET) -O $@.tmp http://suika.fam.cx/gate/cvs/*checkout*/char/table/eucjp/euc-jp-sw.tbl
+	cp $(EUCTBL_DIR)euc-jp-sw.tbl $@.tmp
 	$(ECHO) '#?PETBL/1.0 SOURCE' > $@
 	$(ECHO) '#?o name="euc-jp-sw"' >> $@
 	$(ECHO) '#?o <-ucs-substition="0x30FB"' >> $@
