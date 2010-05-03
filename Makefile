@@ -36,6 +36,11 @@ GENERATED_FILES = $(PM_FILES)
 
 all: $(ENCODE_DIRECTORIES)
 
+rpm: $(ENCODE_DIRECTORIES:%=rpm-%)
+
+$(ENCODE_DIRECTORIES:%=rpm-%): rpm-%: %
+	cd $< && cpan2rpm . --no-sign
+
 GLJIS1978: $(UCM_DIR)gl-jis-1978.ucm Makefile
 	make subdir SUBDIR_DIRNAME=$@ SUBDIR_SOURCE=$< SUBDIR_VERSION=0.02 \
 	  SUBDIR_ENCODE_NAME=gl-jis-1978
