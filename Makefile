@@ -109,14 +109,14 @@ subdir: Makefile
 release-update: \
     GLJIS1978 GLJIS1983 GLJIS1997 GLJIS1997Swapped \
     EUCJP1997 EUCJP1997OPENNEC EUCJPSW ShiftJIS1997
-	$(MV) GLJIS1978/Encode-GLJIS1978-0.01.tar.gz ./
-	$(MV) GLJIS1983/Encode-GLJIS1983-0.01.tar.gz ./
-	$(MV) GLJIS1997/Encode-GLJIS1997-0.01.tar.gz ./
-	$(MV) GLJIS1997Swapped/Encode-GLJIS1997Swapped-0.01.tar.gz ./
-	$(MV) EUCJP1997/Encode-EUCJP1997-0.02.tar.gz ./
-	$(MV) EUCJP1997OPENNEC/Encode-EUCJP1997OPENNEC-0.01.tar.gz ./
-	$(MV) EUCJPSW/Encode-EUCJPSW-0.01.tar.gz ./
-	$(MV) ShiftJIS1997/Encode-ShiftJIS1997-0.01.tar.gz ./
+	$(MV) GLJIS1978/Encode-GLJIS1978-0.02.tar.gz ./
+	$(MV) GLJIS1983/Encode-GLJIS1983-0.02.tar.gz ./
+	$(MV) GLJIS1997/Encode-GLJIS1997-0.02.tar.gz ./
+	$(MV) GLJIS1997Swapped/Encode-GLJIS1997Swapped-0.02.tar.gz ./
+	$(MV) EUCJP1997/Encode-EUCJP1997-0.03.tar.gz ./
+	$(MV) EUCJP1997OPENNEC/Encode-EUCJP1997OPENNEC-0.02.tar.gz ./
+	$(MV) EUCJPSW/Encode-EUCJPSW-0.02.tar.gz ./
+	$(MV) ShiftJIS1997/Encode-ShiftJIS1997-0.02.tar.gz ./
 
 clean-GLJIS1978 clean-GLJIS1983 clean-GLJIS1997 clean-GLJIS1997Swapped \
   clean-EUCJP1997 clean-EUCJP1997OPENNEC clean-EUCJPSW \
