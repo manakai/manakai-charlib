@@ -34,9 +34,27 @@ ENCODE_DIRECTORIES = \
 
 GENERATED_FILES = $(PM_FILES)
 
+RPM = rpm
+RPMBUILD = rpmbuild
+
+UMBRELLA_RPM_SPEC = config/manakai-charlib.spec
+RPM_SPEC_DIR = $(shell $(RPM) --eval "%{_specdir}")
+RPM_SOURCE_DIR = $(shell $(RPM) --eval "%{_sourcedir}")
+
 all: $(ENCODE_DIRECTORIES)
 
-rpm: $(ENCODE_DIRECTORIES:%=rpm-%)
+rpm: $(ENCODE_DIRECTORIES:%=rpm-%) umbrella-rpm
+
+umbrella-rpm: \
+  $(RPM_SPEC_DIR)/manakai-charlib.spec \
+  $(RPM_SOURCE_DIR)/manakai-charlib-readme.en.html
+	$(RPMBUILD) -ba $<
+
+$(RPM_SPEC_DIR)/manakai-charlib.spec: $(UMBRELLA_RPM_SPEC)
+	$(CP) $< $@
+
+$(RPM_SOURCE_DIR)/manakai-charlib-readme.en.html: readme.en.html
+	$(CP) $< $@
 
 $(ENCODE_DIRECTORIES:%=rpm-%): rpm-%: %
 	cd $< && cpan2rpm . --no-sign
